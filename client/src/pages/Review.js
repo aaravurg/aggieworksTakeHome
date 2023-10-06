@@ -26,8 +26,9 @@ export const Review = () => {
   const [songImage, setSongImage] = useState("");
   const [songRelease, setSongRelease] = useState("");
   const [artName, setArtName] = useState("");
-  const navigate = useNavigate(); 
-
+  const navigate = useNavigate();
+  const usid = localStorage.getItem("userID");
+  console.log(usid);
   useEffect(() => {
     var authParameters = {
       method: "POST",
@@ -99,7 +100,7 @@ export const Review = () => {
       releaseDate: formatDate(songRelease),
       imageUrl: songImage,
       songReview: review,
-      userOwner: localStorage.getItem("userID"),
+      userOwner: localStorage.getItem("username"),
     };
     console.log(data);
     try {
@@ -175,99 +176,101 @@ export const Review = () => {
   }
 
   return (
-    <div className="abc">
-      <Container>
-        <InputGroup size="lg">
-          <FormControl
-            placeholder="Search for Artist"
-            type="input"
-            onKeyDown={(event) => {
-              if (event.key == "Enter") {
-                search();
-              }
-            }}
-            onChange={(event) => setSearchInput(event.target.value)}
-          />
-          <Button onClick={search}>Search</Button>
-        </InputGroup>
-      </Container>
-
-      <Container style={{ padding: 10 }}>
-        <Row className="mx-2 row row-cols-4">
-          {searchResults.map((album, i) => {
-            return (
-              <Card
-                key={i}
-                style={{
-                  backgroundColor:
-                    i === selectedCard ? "lightblue" : "transparent",
-                  margin: 25,
-                  // Add any other inline styles here
-                }}
-                onClick={() => {
-                  handleCardClick(i);
-                  handleShow();
-                }}
-              >
-                <Card.Img src={albResults[i].images[0].url} />
-                <Card.Body>
-                  <Card.Title>{album.name}</Card.Title>
-                  <Card.Text>
-                    {formatDate(albResults[i].release_date)}
-                  </Card.Text>
-                  <Card.Text>{albResults[i].artists[0].name}</Card.Text>
-                </Card.Body>
-              </Card>
-            );
-          })}
-        </Row>
-      </Container>
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Submit review for {songName}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Released: {songRelease}</Modal.Body>
-        <Modal.Body
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <img src={songImage} alt="Song" />
-        </Modal.Body>
-        <Modal.Body
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          {artName}
-        </Modal.Body>
-
-        <Container style={{ marginBottom: 30 }}>
+    usid && (
+      <div className="abc">
+        <Container>
           <InputGroup size="lg">
-            <Form.Control
-              as="textarea"
-              style={{ paddingBottom: 50 }}
-              placeholder="Enter Review"
+            <FormControl
+              placeholder="Search for Artist"
+              type="input"
               onKeyDown={(event) => {
-                console.log("Abc");
+                if (event.key == "Enter") {
+                  search();
+                }
               }}
-              onChange={(event) => setReview(event.target.value)}
+              onChange={(event) => setSearchInput(event.target.value)}
             />
+            <Button onClick={search}>Search</Button>
           </InputGroup>
         </Container>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleSubmit}>
-            Submit
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </div>
+
+        <Container style={{ padding: 10 }}>
+          <Row className="mx-2 row row-cols-4">
+            {searchResults.map((album, i) => {
+              return (
+                <Card
+                  key={i}
+                  style={{
+                    backgroundColor:
+                      i === selectedCard ? "lightblue" : "transparent",
+                    margin: 25,
+                    // Add any other inline styles here
+                  }}
+                  onClick={() => {
+                    handleCardClick(i);
+                    handleShow();
+                  }}
+                >
+                  <Card.Img src={albResults[i].images[0].url} />
+                  <Card.Body>
+                    <Card.Title>{album.name}</Card.Title>
+                    <Card.Text>
+                      {formatDate(albResults[i].release_date)}
+                    </Card.Text>
+                    <Card.Text>{albResults[i].artists[0].name}</Card.Text>
+                  </Card.Body>
+                </Card>
+              );
+            })}
+          </Row>
+        </Container>
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Submit review for {songName}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Released: {songRelease}</Modal.Body>
+          <Modal.Body
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <img src={songImage} alt="Song" />
+          </Modal.Body>
+          <Modal.Body
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            {artName}
+          </Modal.Body>
+
+          <Container style={{ marginBottom: 30 }}>
+            <InputGroup size="lg">
+              <Form.Control
+                as="textarea"
+                style={{ paddingBottom: 50 }}
+                placeholder="Enter Review"
+                onKeyDown={(event) => {
+                  console.log("Abc");
+                }}
+                onChange={(event) => setReview(event.target.value)}
+              />
+            </InputGroup>
+          </Container>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button variant="primary" onClick={handleSubmit}>
+              Submit
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
+    )
   );
 };

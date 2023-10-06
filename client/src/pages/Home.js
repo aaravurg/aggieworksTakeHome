@@ -3,7 +3,7 @@ import axios from "axios";
 import { Container, Row, Col, Image, Card } from "react-bootstrap";
 export const Home = () => {
   const [data, setData] = useState([]);
-
+  const usid = localStorage.getItem("userID");
   useEffect(() => {
     // Make a GET request to your API endpoint
     axios
@@ -19,26 +19,45 @@ export const Home = () => {
   }, []);
 
   return (
-    <Container className="mt-5 text-center"> {/* Apply text-center class to center-align content */}
-      <Row>
-        {data.map((item, index) => (
-          <Col md={4} key={index}> {/* Added a unique key */}
-            <Card className="mb-4">
-              <Card.Img src={item.imageUrl} />
+    usid && (
+      <Container className="mt-5 text-center">
+        {" "}
+        {/* Apply text-center class to center-align content */}
+        <Row>
+          {data.map((item, index) => (
+            <Col md={4} key={index}>
+              {" "}
+              {/* Added a unique key */}
+              <Card className="mb-4">
+                <Card.Img src={item.imageUrl} />
 
-              <Card.Body>
-                <Card.Title>{item.songName}</Card.Title>
-                <Card.Subtitle className="mb-2 text-muted">
-                  {item.artistName}
-                </Card.Subtitle>
-                <Card.Text>{item.songReview}</Card.Text>
-                <Card.Text>Release Date: {item.releaseDate}</Card.Text>
-                <Card.Text>Review by: {item.userOwner}</Card.Text>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Row>
-    </Container>
+                <Card.Body>
+                  <Card.Title style={{ fontSize: 30 }}>
+                    {item.songName}
+                  </Card.Title>
+                  <Card.Subtitle
+                    style={{ fontSize: 20 }}
+                    className="mb-2 text-muted"
+                  >
+                    {item.artistName}
+                  </Card.Subtitle>
+                  <Card.Body>
+                    <Card.Text style={{ fontSize: 20 }}>
+                      {item.songReview}
+                    </Card.Text>
+                  </Card.Body>
+                  <Card.Text style={{ fontSize: 20 }}>
+                    Release Date: {item.releaseDate}
+                  </Card.Text>
+                  <Card.Text style={{ fontSize: 20 }}>
+                    Review by: {item.userOwner}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Container>
+    )
   );
 };
